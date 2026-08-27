@@ -155,8 +155,8 @@ TEXT = {
         "print_button": "Download my result card",
         "footer_note": (
             "LivrCheck is a free, open-source, non-commercial screening "
-            "tool. Your results are saved securely under your account so "
-            "you can review them over time."
+            "tool. Log in (optional, see sidebar) to save your results and "
+            "review them later."
         ),
         "validation_error": "Please enter valid, positive numbers for all fields.",
         "result_card_title": "LivrCheck Result Card",
@@ -321,8 +321,8 @@ TEXT = {
         "print_button": "मेरा रिज़ल्ट कार्ड डाउनलोड करें",
         "footer_note": (
             "लिवरचेक एक मुफ़्त, ओपन-सोर्स, गैर-व्यावसायिक स्क्रीनिंग टूल "
-            "है। आपके परिणाम आपके अकाउंट के तहत सुरक्षित रूप से सहेजे जाते "
-            "हैं ताकि आप समय के साथ उन्हें देख सकें।"
+            "है। अपने परिणाम सहेजने और बाद में देखने के लिए लॉग इन करें "
+            "(वैकल्पिक, साइडबार में देखें)।"
         ),
         "validation_error": "कृपया सभी फ़ील्ड में सही, धनात्मक संख्याएं दर्ज करें।",
         "result_card_title": "लिवरचेक रिज़ल्ट कार्ड",

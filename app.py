@@ -58,62 +58,56 @@ with st.sidebar:
         else "लिवरचेक एक मुफ़्त, ओपन-सोर्स, गैर-व्यावसायिक स्क्रीनिंग टूल है।"
     )
 
+    st.markdown("---")
     user = auth.current_user()
     if user:
-        st.markdown("---")
         st.caption(f"{_('logged_in_as')} {user.email}")
         if st.button(_("logout_button"), use_container_width=True):
             auth.sign_out()
             st.rerun()
+    else:
+        with st.expander(f"🔐 {_('login_tab')} / {_('signup_tab')}"):
+            tab_login, tab_signup = st.tabs([_("login_tab"), _("signup_tab")])
 
+            with tab_login:
+                with st.form("login_form"):
+                    login_email = st.text_input(_("email_label"), key="login_email")
+                    login_password = st.text_input(_("password_label"), type="password", key="login_password")
+                    login_submitted = st.form_submit_button(
+                        _("login_button"), type="primary", use_container_width=True
+                    )
+                if login_submitted:
+                    if not login_email or not login_password:
+                        st.error(_("auth_validation_error"))
+                    else:
+                        try:
+                            auth.sign_in(login_email, login_password)
+                        except Exception:
+                            st.error(_("login_error"))
+                        else:
+                            st.rerun()
 
-# ---------------------------------------------------------------------------
-# Auth gate — everything below requires login
-# ---------------------------------------------------------------------------
-
-if not auth.current_user():
-    st.title(f"🩺 {_('app_title')}")
-    st.subheader(_("app_subtitle"))
-
-    tab_login, tab_signup = st.tabs([_("login_tab"), _("signup_tab")])
-
-    with tab_login:
-        with st.form("login_form"):
-            login_email = st.text_input(_("email_label"), key="login_email")
-            login_password = st.text_input(_("password_label"), type="password", key="login_password")
-            login_submitted = st.form_submit_button(_("login_button"), type="primary", use_container_width=True)
-        if login_submitted:
-            if not login_email or not login_password:
-                st.error(_("auth_validation_error"))
-            else:
-                try:
-                    auth.sign_in(login_email, login_password)
-                except Exception:
-                    st.error(_("login_error"))
-                else:
-                    st.rerun()
-
-    with tab_signup:
-        with st.form("signup_form"):
-            signup_email = st.text_input(_("email_label"), key="signup_email")
-            signup_password = st.text_input(
-                _("password_label"), type="password", help=_("password_help"), key="signup_password"
-            )
-            signup_submitted = st.form_submit_button(_("signup_button"), type="primary", use_container_width=True)
-        if signup_submitted:
-            if not signup_email or not signup_password:
-                st.error(_("auth_validation_error"))
-            elif len(signup_password) < 6:
-                st.error(_("password_too_short"))
-            else:
-                try:
-                    auth.sign_up(signup_email, signup_password)
-                except Exception as exc:
-                    st.error(f"{_('signup_error')}: {exc}")
-                else:
-                    st.success(_("signup_success"))
-
-    st.stop()
+            with tab_signup:
+                with st.form("signup_form"):
+                    signup_email = st.text_input(_("email_label"), key="signup_email")
+                    signup_password = st.text_input(
+                        _("password_label"), type="password", help=_("password_help"), key="signup_password"
+                    )
+                    signup_submitted = st.form_submit_button(
+                        _("signup_button"), type="primary", use_container_width=True
+                    )
+                if signup_submitted:
+                    if not signup_email or not signup_password:
+                        st.error(_("auth_validation_error"))
+                    elif len(signup_password) < 6:
+                        st.error(_("password_too_short"))
+                    else:
+                        try:
+                            auth.sign_up(signup_email, signup_password)
+                        except Exception as exc:
+                            st.error(f"{_('signup_error')}: {exc}")
+                        else:
+                            st.success(_("signup_success"))
 
 
 # ---------------------------------------------------------------------------
@@ -137,30 +131,31 @@ st.markdown("---")
 
 current_user = auth.current_user()
 
-with st.expander(_("history_heading")):
-    try:
-        history = auth.get_history(current_user.id)
-    except Exception:
-        history = []
+if current_user:
+    with st.expander(_("history_heading")):
+        try:
+            history = auth.get_history(current_user.id)
+        except Exception:
+            history = []
 
-    if not history:
-        st.caption(_("no_history_yet"))
-    else:
-        tier_labels = {"low": _("tier_low"), "intermediate": _("tier_intermediate"), "high": _("tier_high")}
-        st.dataframe(
-            [
-                {
-                    _("result_card_generated"): row["created_at"][:10],
-                    _("score_label"): row["score"],
-                    _("results_heading"): tier_labels.get(row["tier"], row["tier"]),
-                }
-                for row in history
-            ],
-            use_container_width=True,
-            hide_index=True,
-        )
+        if not history:
+            st.caption(_("no_history_yet"))
+        else:
+            tier_labels = {"low": _("tier_low"), "intermediate": _("tier_intermediate"), "high": _("tier_high")}
+            st.dataframe(
+                [
+                    {
+                        _("result_card_generated"): row["created_at"][:10],
+                        _("score_label"): row["score"],
+                        _("results_heading"): tier_labels.get(row["tier"], row["tier"]),
+                    }
+                    for row in history
+                ],
+                use_container_width=True,
+                hide_index=True,
+            )
 
-st.markdown("---")
+    st.markdown("---")
 
 
 # ---------------------------------------------------------------------------
@@ -210,18 +205,19 @@ if submitted:
         except InvalidInputError as exc:
             st.error(str(exc))
         else:
-            try:
-                auth.save_result(
-                    current_user.id,
-                    age=age,
-                    ast=ast,
-                    alt=alt,
-                    platelets=platelets,
-                    score=result.score,
-                    tier=result.tier,
-                )
-            except Exception:
-                st.warning(_("history_save_error"))
+            if current_user:
+                try:
+                    auth.save_result(
+                        current_user.id,
+                        age=age,
+                        ast=ast,
+                        alt=alt,
+                        platelets=platelets,
+                        score=result.score,
+                        tier=result.tier,
+                    )
+                except Exception:
+                    st.warning(_("history_save_error"))
 
             st.markdown("---")
             st.markdown(f"## {_('results_heading')}")
