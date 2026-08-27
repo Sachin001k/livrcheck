@@ -14,7 +14,17 @@ import streamlit as st
 
 import auth
 from fib4 import calculate_fib4, calculate_bmi, bmi_category, InvalidInputError, LOW_RISK_CUTOFF, HIGH_RISK_CUTOFF
-from styles import CUSTOM_CSS, render_hero, render_gauge
+from styles import (
+    CUSTOM_CSS,
+    SIDEBAR_ACCENT,
+    render_hero,
+    render_gauge,
+    render_sidebar_badge,
+    render_how_it_works,
+    render_why_matters,
+    render_diet_section,
+    render_faq,
+)
 from translations import t
 
 
@@ -60,6 +70,8 @@ LANGUAGE_OPTIONS = {
 # ---------------------------------------------------------------------------
 
 with st.sidebar:
+    st.markdown(SIDEBAR_ACCENT, unsafe_allow_html=True)
+
     st.markdown("### 🌐 Language")
     lang_choice = st.selectbox(
         label="Language",
@@ -70,17 +82,18 @@ with st.sidebar:
     )
     st.session_state.lang = lang_choice
 
-    st.markdown("---")
+    st.markdown(render_sidebar_badge("🌱", "Free & open-source", "teal"), unsafe_allow_html=True)
     st.caption(_("sidebar_tagline"))
 
     st.markdown("---")
     user = auth.current_user()
     if user:
-        st.caption(f"{_('logged_in_as')} {user.email}")
+        st.markdown(render_sidebar_badge("👤", f"{_('logged_in_as')} {user.email}", "purple"), unsafe_allow_html=True)
         if st.button(_("logout_button"), use_container_width=True):
             auth.sign_out()
             st.rerun()
     else:
+        st.markdown(render_sidebar_badge("🔐", "Optional login", "rose"), unsafe_allow_html=True)
         with st.expander(f"🔐 {_('login_tab')} / {_('signup_tab')}"):
             tab_login, tab_signup = st.tabs([_("login_tab"), _("signup_tab")])
 
@@ -131,8 +144,19 @@ with st.sidebar:
 
 st.markdown(render_hero(_("app_title"), _("app_subtitle")), unsafe_allow_html=True)
 
+st.markdown(f"#### {_('how_it_works_heading')}")
+how_it_works_steps = [
+    (_("how_it_works_step1_title"), _("how_it_works_step1_body")),
+    (_("how_it_works_step2_title"), _("how_it_works_step2_body")),
+    (_("how_it_works_step3_title"), _("how_it_works_step3_body")),
+    (_("how_it_works_step4_title"), _("how_it_works_step4_body")),
+]
+st.markdown(render_how_it_works(how_it_works_steps), unsafe_allow_html=True)
+
 st.markdown(f"#### {_('intro_heading')}")
 st.markdown(_("intro_body"))
+
+st.markdown(render_why_matters(_("why_matters_heading"), _("why_matters_body")), unsafe_allow_html=True)
 
 st.info(f"**{_('not_alcohol_heading')}**\n\n{_('not_alcohol_body')}")
 
@@ -270,6 +294,35 @@ if submitted:
             st.markdown(f"#### {_('action_heading')}")
             st.markdown(_(action_key))
 
+            # --- Diet & nutrition (tiered, personalized) ---
+            st.markdown(f"#### {_('diet_heading')}")
+            framing_key = f"diet_framing_{result.tier}"
+            weight_note = ""
+            if height and weight:
+                try:
+                    if bmi_category(calculate_bmi(height, weight)) in ("overweight", "obese"):
+                        weight_note = _("diet_weight_loss_note")
+                except InvalidInputError:
+                    pass
+            diabetes_note_text = _("diet_diabetes_note") if diabetes == _("yes") else ""
+            st.markdown(
+                render_diet_section(
+                    framing_text=_(framing_key),
+                    tier=result.tier,
+                    favor_heading=_("diet_favor_heading"),
+                    favor_list_md=_("diet_favor_list"),
+                    limit_heading=_("diet_limit_heading"),
+                    limit_list_md=_("diet_limit_list"),
+                    plate_method=_("diet_plate_method"),
+                    disclaimer_heading=_("diet_disclaimer_heading"),
+                    disclaimer_body=_("diet_disclaimer_body"),
+                    sources_text=_("diet_sources"),
+                    weight_note=weight_note,
+                    diabetes_note=diabetes_note_text,
+                ),
+                unsafe_allow_html=True,
+            )
+
             # --- BMI context (optional) ---
             if height and weight:
                 try:
@@ -340,6 +393,21 @@ if submitted:
             share_text = _("share_message_template").format(url=app_url)
             wa_link = "https://wa.me/?text=" + urllib.parse.quote(share_text)
             st.link_button(_("share_button_text"), wa_link, use_container_width=True)
+
+
+# ---------------------------------------------------------------------------
+# FAQ
+# ---------------------------------------------------------------------------
+
+st.markdown("---")
+st.markdown(f"### {_('faq_heading')}")
+faq_items = [
+    (_("faq_q1"), _("faq_a1")),
+    (_("faq_q2"), _("faq_a2")),
+    (_("faq_q3"), _("faq_a3")),
+    (_("faq_q4"), _("faq_a4")),
+]
+st.markdown(render_faq(faq_items), unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------------------
