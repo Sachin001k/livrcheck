@@ -13,7 +13,8 @@ from datetime import datetime
 import streamlit as st
 
 import auth
-from fib4 import calculate_fib4, calculate_bmi, bmi_category, InvalidInputError
+from fib4 import calculate_fib4, calculate_bmi, bmi_category, InvalidInputError, LOW_RISK_CUTOFF, HIGH_RISK_CUTOFF
+from styles import CUSTOM_CSS, render_hero, render_gauge
 from translations import t
 
 
@@ -26,6 +27,8 @@ st.set_page_config(
     page_icon="🩺",
     layout="centered",
 )
+
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 if "lang" not in st.session_state:
     st.session_state.lang = "en"
@@ -126,8 +129,7 @@ with st.sidebar:
 # Header
 # ---------------------------------------------------------------------------
 
-st.title(f"🩺 {_('app_title')}")
-st.subheader(_("app_subtitle"))
+st.markdown(render_hero(_("app_title"), _("app_subtitle")), unsafe_allow_html=True)
 
 st.markdown(f"#### {_('intro_heading')}")
 st.markdown(_("intro_body"))
@@ -246,6 +248,11 @@ if submitted:
                 st.metric(_("score_label"), f"{result.score}")
             with tier_col:
                 st.metric(_("results_heading"), tier_label)
+
+            st.markdown(
+                render_gauge(result.score, result.tier, LOW_RISK_CUTOFF, HIGH_RISK_CUTOFF),
+                unsafe_allow_html=True,
+            )
 
             explanation_key = f"tier_{result.tier}_explanation"
             action_key = f"action_{result.tier}"
