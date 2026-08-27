@@ -36,27 +36,39 @@ def _(key: str) -> str:
     return t(st.session_state.lang, key)
 
 
+LANGUAGE_OPTIONS = {
+    "en": "English",
+    "hi": "हिन्दी",
+    "mr": "मराठी",
+    "bn": "বাংলা",
+    "te": "తెలుగు",
+    "ta": "தமிழ்",
+    "gu": "ગુજરાતી",
+    "ur": "اردو",
+    "kn": "ಕನ್ನಡ",
+    "or": "ଓଡ଼ିଆ",
+    "ml": "മലയാളം",
+    "pa": "ਪੰਜਾਬੀ",
+}
+
+
 # ---------------------------------------------------------------------------
 # Sidebar — language toggle
 # ---------------------------------------------------------------------------
 
 with st.sidebar:
-    st.markdown(f"### {t(st.session_state.lang, 'language_label')}")
-    lang_choice = st.radio(
+    st.markdown("### 🌐 Language")
+    lang_choice = st.selectbox(
         label="Language",
-        options=["en", "hi"],
-        format_func=lambda code: "English" if code == "en" else "हिन्दी",
-        index=0 if st.session_state.lang == "en" else 1,
+        options=list(LANGUAGE_OPTIONS.keys()),
+        format_func=lambda code: LANGUAGE_OPTIONS[code],
+        index=list(LANGUAGE_OPTIONS.keys()).index(st.session_state.lang),
         label_visibility="collapsed",
     )
     st.session_state.lang = lang_choice
 
     st.markdown("---")
-    st.caption(
-        "LivrCheck is a free, open-source, non-commercial screening tool."
-        if st.session_state.lang == "en"
-        else "लिवरचेक एक मुफ़्त, ओपन-सोर्स, गैर-व्यावसायिक स्क्रीनिंग टूल है।"
-    )
+    st.caption(_("sidebar_tagline"))
 
     st.markdown("---")
     user = auth.current_user()

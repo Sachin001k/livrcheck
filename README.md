@@ -109,10 +109,12 @@ git push -u origin main
 
 ## Before sharing this publicly
 
-- [ ] Have a native Hindi speaker review all strings in `translations.py`
-      under the `"hi"` dictionary. They're marked with a
-      `NEEDS_NATIVE_REVIEW` note at the top of the file. This was drafted
-      by Claude and has **not** been reviewed by a native speaker yet.
+- [ ] Have a native speaker review each language's strings in
+      `translations.py` before relying on it publicly. All 11 non-English
+      languages (Hindi, Marathi, Bengali, Telugu, Tamil, Gujarati, Urdu,
+      Kannada, Odia, Malayalam, Punjabi) were drafted by Claude and have
+      **not** been reviewed by a native speaker yet — this matters
+      especially here since the content includes medical guidance.
 - [ ] Update the WhatsApp share URL in `app.py` once deployed (see above).
 - [ ] Double check the FIB-4 cut-offs and citations in `fib4.py` and
       `translations.py` against the sources in the project write-up if
