@@ -155,11 +155,29 @@ TEXT = {
         "print_button": "Download my result card",
         "footer_note": (
             "LivrCheck is a free, open-source, non-commercial screening "
-            "tool. It does not store or transmit your data anywhere."
+            "tool. Your results are saved securely under your account so "
+            "you can review them over time."
         ),
         "validation_error": "Please enter valid, positive numbers for all fields.",
         "result_card_title": "LivrCheck Result Card",
         "result_card_generated": "Generated on",
+        "login_tab": "Log in",
+        "signup_tab": "Sign up",
+        "email_label": "Email",
+        "password_label": "Password",
+        "password_help": "At least 6 characters.",
+        "login_button": "Log in",
+        "signup_button": "Create account",
+        "logout_button": "Log out",
+        "logged_in_as": "Logged in as",
+        "auth_validation_error": "Please enter both an email and a password.",
+        "password_too_short": "Password must be at least 6 characters.",
+        "login_error": "Could not log in. Check your email and password and try again.",
+        "signup_error": "Could not create account",
+        "signup_success": "Account created! Check your email to confirm it, then log in.",
+        "history_heading": "My past results",
+        "no_history_yet": "No results saved yet. Calculate your FIB-4 score below to save your first one.",
+        "history_save_error": "Your result was calculated but could not be saved to your history right now.",
     },
     "hi": {
         # NEEDS_NATIVE_REVIEW: draft translation, not yet checked by a
@@ -303,11 +321,29 @@ TEXT = {
         "print_button": "मेरा रिज़ल्ट कार्ड डाउनलोड करें",
         "footer_note": (
             "लिवरचेक एक मुफ़्त, ओपन-सोर्स, गैर-व्यावसायिक स्क्रीनिंग टूल "
-            "है। यह आपका डेटा कहीं भी संग्रहीत या प्रसारित नहीं करता।"
+            "है। आपके परिणाम आपके अकाउंट के तहत सुरक्षित रूप से सहेजे जाते "
+            "हैं ताकि आप समय के साथ उन्हें देख सकें।"
         ),
         "validation_error": "कृपया सभी फ़ील्ड में सही, धनात्मक संख्याएं दर्ज करें।",
         "result_card_title": "लिवरचेक रिज़ल्ट कार्ड",
         "result_card_generated": "बनाया गया",
+        "login_tab": "लॉग इन करें",
+        "signup_tab": "साइन अप करें",
+        "email_label": "ईमेल",
+        "password_label": "पासवर्ड",
+        "password_help": "कम से कम 6 अक्षर।",
+        "login_button": "लॉग इन करें",
+        "signup_button": "अकाउंट बनाएं",
+        "logout_button": "लॉग आउट करें",
+        "logged_in_as": "लॉग इन:",
+        "auth_validation_error": "कृपया ईमेल और पासवर्ड दोनों दर्ज करें।",
+        "password_too_short": "पासवर्ड कम से कम 6 अक्षर का होना चाहिए।",
+        "login_error": "लॉग इन नहीं हो सका। कृपया अपना ईमेल और पासवर्ड जांचें और फिर से प्रयास करें।",
+        "signup_error": "अकाउंट नहीं बनाया जा सका",
+        "signup_success": "अकाउंट बन गया! इसे कन्फर्म करने के लिए अपना ईमेल जांचें, फिर लॉग इन करें।",
+        "history_heading": "मेरे पिछले परिणाम",
+        "no_history_yet": "अभी तक कोई परिणाम सहेजा नहीं गया है। अपना पहला परिणाम सहेजने के लिए नीचे अपना FIB-4 स्कोर निकालें।",
+        "history_save_error": "आपका परिणाम निकाला गया, लेकिन अभी इसे आपके इतिहास में सहेजा नहीं जा सका।",
     },
 }
 

@@ -14,17 +14,43 @@ Built with Python + [Streamlit](https://streamlit.io).
 
 ```
 livrcheck/
-├── app.py            # Streamlit UI — the main app
-├── fib4.py           # Core FIB-4 + BMI calculation logic (no UI dependencies)
-├── translations.py   # All English + Hindi text, in one place
-├── test_fib4.py       # Unit tests for the calculation logic
-├── requirements.txt  # Python dependencies
+├── app.py                          # Streamlit UI — the main app
+├── fib4.py                         # Core FIB-4 + BMI calculation logic (no UI dependencies)
+├── auth.py                         # Supabase login/signup + saved result history
+├── translations.py                 # All English + Hindi text, in one place
+├── test_fib4.py                    # Unit tests for the calculation logic
+├── supabase_schema.sql             # Run once in Supabase to create the results table
+├── requirements.txt                # Python dependencies
+├── .streamlit/secrets.toml.example # Template for your Supabase credentials
 └── .gitignore
 ```
 
 The calculation logic (`fib4.py`) is deliberately separated from the UI
 (`app.py`) so it can be unit tested independently — see `test_fib4.py`.
 All 13 tests currently pass.
+
+## Login & history storage (Supabase)
+
+LivrCheck requires users to log in, and saves each calculated FIB-4 result
+under their account so they can review it later. This is backed by
+[Supabase](https://supabase.com) (free tier) — it provides both the
+email/password auth and the database table for saved results.
+
+1. Create a free account/project at [supabase.com](https://supabase.com).
+2. In the Supabase dashboard, open **SQL Editor -> New query**, paste in the
+   contents of [`supabase_schema.sql`](supabase_schema.sql), and run it. This
+   creates the `fib4_results` table with Row Level Security so each user can
+   only ever see their own saved results.
+3. In **Settings -> API**, copy the **Project URL** and the **anon public**
+   key.
+4. Locally: copy `.streamlit/secrets.toml.example` to
+   `.streamlit/secrets.toml` and paste in those two values. This file is
+   already git-ignored and must never be committed.
+5. On Streamlit Community Cloud: open your app -> **Settings -> Secrets**,
+   and paste in the same two lines.
+6. By default, Supabase requires users to confirm their email address
+   before they can log in after signing up — that's expected behavior, not
+   a bug.
 
 ## Running it locally (in VS Code)
 
@@ -35,7 +61,9 @@ All 13 tests currently pass.
    source .venv/bin/activate      # on Windows: .venv\Scripts\activate
    pip install -r requirements.txt
    ```
-3. Run the tests to confirm everything works:
+3. Complete the Supabase setup above (the app won't start without valid
+   `SUPABASE_URL` / `SUPABASE_KEY` in `.streamlit/secrets.toml`).
+4. Run the tests to confirm everything works:
    ```bash
    pip install pytest
    python -m pytest test_fib4.py -v
@@ -89,6 +117,11 @@ git push -u origin main
 - [ ] Double check the FIB-4 cut-offs and citations in `fib4.py` and
       `translations.py` against the sources in the project write-up if
       anything changes.
+- [ ] Complete the Supabase setup above (login won't work without it).
+- [ ] Write and link a privacy policy — the app now stores accounts and
+      per-user health results (FIB-4 scores), which is personal health data
+      and carries privacy obligations (e.g. India's DPDP Act 2023) beyond
+      what a fully anonymous calculator would.
 
 ## Sources
 
